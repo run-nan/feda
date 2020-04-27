@@ -18,6 +18,11 @@ if (cluster.isMaster) {
         cluster.fork();
     }
 
+    // 创建静态资源伺服根目录
+    if (!fs.existsSync(ENV.ASSETS_PATH)) {
+        fs.mkdirSync(ENV.ASSETS_PATH);
+    }
+
     // 子进程启动时打印日志
     cluster.on('online', (worker) => {
         logger.mark(`Worker[${worker.process.pid}] is online`);
