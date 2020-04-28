@@ -45,4 +45,5 @@ if (cluster.isMaster) {
         cert
     };
     https.createServer(options, app).listen(3000);
+    console.log('Feda started on https://localhost:3000');
 }

@@ -6,9 +6,10 @@ const deployApp = require('../middlewares/deploy-app-handler');
 const undeployApp = require('../middlewares/undeploy-app-handler');
 const errorHandler = require('../middlewares/error-handler');
 const logger = require('../middlewares/logger-handler');
+const ENV = require('../env');
 
 const router = express.Router();
-const upload = multer({ dest: 'temp' });
+const upload = multer({ dest: ENV.PACKAGE_PATH });
 
 const PREFIX = '/rest/feda/v1';
 
