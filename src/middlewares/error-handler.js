@@ -4,6 +4,6 @@ module.exports = (err, req, res, next) => { //eslint-disable-line
     logger.error('unexpected error:' + `\n${err.stack}`);
     res.status(500).json({
         success: false,
-        data: 'There is an unexpected error on the server'
+        message: 'There is an unexpected error on the server'
     });
 };

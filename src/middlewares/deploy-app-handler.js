@@ -12,14 +12,20 @@ module.exports = async (req, res, next) => {
             fs.mkdirSync(ENV.ASSETS_PATH);
         }
         const appAssetsRoot = path.join(ENV.ASSETS_PATH, `./${req.params.appName}`);
-        if (!fs.existsSync(appAssetsRoot)) {
+        if (fs.existsSync(appAssetsRoot)) {
+            res.json({
+                success: false,
+                message: `Failed to deploy ${req.params.appName} because an app with the same name does exists`
+            });
+        } else {
             fs.mkdirSync(appAssetsRoot);
+            await compressing.zip.uncompress(req.file.path, appAssetsRoot);
+            await unlink(req.file.path);
+            res.json({
+                success: true
+            });
         }
-        await compressing.zip.uncompress(req.file.path, appAssetsRoot);
-        await unlink(req.file.path);
-        res.json({ success: true });
     } catch (error) {
-        console.log(error);
-        // next(error);
+        next(error);
     }
 };
