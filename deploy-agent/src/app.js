@@ -20,7 +20,7 @@ if (cluster.isMaster) {
 
     // 创建静态资源伺服根目录
     if (!fs.existsSync(ENV.ASSETS_PATH)) {
-        fs.mkdirSync(ENV.ASSETS_PATH);
+        fs.mkdirSync(ENV.ASSETS_PATH, {mode: ENV.FILE_PRIVILEGE});
     }
 
     // 子进程启动时打印日志
@@ -28,11 +28,18 @@ if (cluster.isMaster) {
         logger.mark(`Worker[${worker.process.pid}] is online`);
     });
 
+    const MAX_RESTART_COUNT = 100;
+    let restartCount = 0;
     // 子进程退出时，主进程重新启动一个子进程
     cluster.on('exit', (worker, code, signal) => {
-        logger.error(`Worker[${worker.process.pid}] died with code: ${code} and signal: ${signal}`);
-        logger.mark('Start a new worker');
-        cluster.fork();
+        if (restartCount < MAX_RESTART_COUNT) {
+            logger.error(`Worker[${worker.process.pid}] died with code: ${code} and signal: ${signal}`);
+            logger.mark('Start a new worker');
+            cluster.fork();
+            restartCount++;
+        } else {
+            logger.mark('App stopped because');
+        }
     });
 } else {
     LogUtil.init();

@@ -1,5 +1,3 @@
 node_modules
+.workspace
 ssl
-log
-feda-assets
-.temp

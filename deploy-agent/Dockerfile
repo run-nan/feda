@@ -1,7 +1,10 @@
 FROM node:alpine
-COPY . /home/app
-WORKDIR /home/app
-RUN npm install --production
+COPY . /home/feda
+WORKDIR /home/feda
+RUN addgroup ubuntu && \
+    adduser ubuntu && \
+    npm install --production
+USER ubuntu
 EXPOSE 3000
-VOLUME [ "/home/app/feda-assets", "/home/app/log", "/home/app/.temp" ]
+VOLUME [ "/home/feda/.workspace", "/home/feda/ssl" ]
 CMD npm start
