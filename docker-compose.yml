@@ -1,21 +1,23 @@
-version: '3'
+version: "3"
 services: 
     deploy-agent:
         container_name: deploy-agent
         build: ./deploy-agent
         volumes:
             - ~/feda/.workspace:/home/feda/.workspace
-            - ~/feda/ssl:/home/feda/ssl
-            - ~/feda/src:/home/feda/src
+            - ~/.ssh:/home/feda/ssl
+            - ~/feda/deploy-agent/src:/home/feda/src
         ports:
-            - "3000"
+            - 3000:3000
     feda-nginx:
         container_name: feda-nginx
         image: nginx
         volumes:
             - ~/feda/.workspace:/home/feda/.workspace
-            - ~/feda/ssl:/home/feda/ssl
+            - ~/.ssh:/home/feda/ssl
             - ~/feda/nginx/nginx.conf:/etc/nginx/nginx.conf
         ports:
-            - "80"
-            - "443"
+            - 80:80
+            - 443:443
+        depends_on: 
+            - deploy-agent
